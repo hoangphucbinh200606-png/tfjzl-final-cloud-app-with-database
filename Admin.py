@@ -1,6 +1,4 @@
-# onlinecourse/admin.py
 from django.contrib import admin
-# Import the 7 requested classes (adjust if your model names differ slightly)
 from .models import Course, Lesson, Instructor, Learner, Question, Choice, Submission
 
 class ChoiceInline(admin.StackedInline):
@@ -11,6 +9,10 @@ class QuestionInline(admin.StackedInline):
     model = Question
     extra = 2
 
+class LessonInline(admin.StackedInline):
+    model = Lesson
+    extra = 5
+
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
     list_display = ['question_text']
@@ -20,9 +22,12 @@ class LessonAdmin(admin.ModelAdmin):
     inlines = [QuestionInline]
 
 class CourseAdmin(admin.ModelAdmin):
+    inlines = [LessonInline]
     list_display = ('name', 'pub_date')
+    list_filter = ['pub_date']
+    search_fields = ['name', 'description']
 
-# Registering models
+# Đăng ký các model với admin site
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Instructor)
